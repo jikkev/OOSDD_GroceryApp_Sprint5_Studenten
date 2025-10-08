@@ -6,7 +6,7 @@ namespace Grocery.Core.Models
     {
         [ObservableProperty]
         public int stock;
-        public decimal prijs;
+        public double prijs;
         public DateOnly ShelfLife { get; set; }
         public Product(int id, string name, int stock) : this(id, name, stock, default, default) { }
 
@@ -16,11 +16,11 @@ namespace Grocery.Core.Models
         {
             Stock = stock;
             ShelfLife = shelfLife;
-            Prijs = prijs;
+            prijs = prijs;
         }
         public override string? ToString()
         {
-            return $"{Name} - {Stock} op voorraad - €{Prijs}";
+            return $"{Name} - {Stock} op voorraad - € {prijs}";
         }
     }
 }
