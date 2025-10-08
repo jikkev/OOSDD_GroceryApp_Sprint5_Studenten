@@ -13,7 +13,12 @@ namespace Grocery.App.ViewModels
         {
             _productService = productService;
             Products = [];
-            foreach (Product p in _productService.GetAll()) Products.Add(p);
+            foreach (Product p in _productService.GetAll())
+            {
+                System.Diagnostics.Debug.WriteLine($"{p.Name}: €{p.Price}");
+                Products.Add(p);
+            }
+            //foreach (Product p in _productService.GetAll()) Products.Add(p);
         }
     }
 }
