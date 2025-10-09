@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
 {
-    class ProductCategoriesViewModel
+    public class ProductCategoriesViewModel
     {
     }
 }

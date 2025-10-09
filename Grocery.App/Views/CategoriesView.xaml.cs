@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Grocery.App.Views
+﻿namespace Grocery.App.Views
 {
-    internal class CategoriesView
+    public partial class CategoriesView : ContentPage
     {
+       public CategoriesView() { }
     }
 }
