@@ -1,6 +1,8 @@
 ﻿using Grocery.Core.Interfaces.Repositories;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grocery.Core.Services
 {
@@ -36,6 +38,11 @@ namespace Grocery.Core.Services
         public Product? Update(Product item)
         {
             return _productRepository.Update(item);
+        }
+
+        public IEnumerable<Product> GetByCategoryId(int categoryId)
+        {
+            return _productRepository.GetByCategoryId(categoryId);
         }
     }
 }

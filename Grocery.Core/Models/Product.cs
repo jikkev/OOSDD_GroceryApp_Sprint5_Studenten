@@ -14,6 +14,12 @@ namespace Grocery.Core.Models
         [ObservableProperty]
         private DateOnly shelfLife;
 
+        [ObservableProperty]
+        private int categoryId;
+
+        [ObservableProperty]
+        private string categoryName = string.Empty;
+
         public Product() { }
 
         public Product(int id, string name, int stock, DateOnly shelfLife, decimal price)
@@ -22,6 +28,16 @@ namespace Grocery.Core.Models
             Stock = stock;
             ShelfLife = shelfLife;
             Price = price;
+        }
+
+        public Product(int id, string name, int stock, DateOnly shelfLife, decimal price, int categoryId, string categoryName)
+            : base(id, name)
+        {
+            Stock = stock;
+            ShelfLife = shelfLife;
+            Price = price;
+            CategoryId = categoryId;
+            CategoryName = categoryName;
         }
 
         public Product(int id, string name, int stock)

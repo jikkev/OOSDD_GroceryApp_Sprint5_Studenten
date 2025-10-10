@@ -1,51 +1,64 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
+             xmlns:models="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
              x:Class="Grocery.App.Views.ProductCategoriesView"
              x:DataType="vm:ProductCategoriesViewModel"
-             Title="Product Categories">
+             Title="{Binding CategoryName}">
 
     <Shell.TitleView>
         <Grid>
-            <Label Text="{Binding Category.Name}" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
+            <Label Text="{Binding CategoryName}" 
+                   FontSize="24" 
+                   TextColor="White"
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center"/>
         </Grid>
     </Shell.TitleView>
 
-
-    <Border Stroke="#C49B33"
-    StrokeThickness="4"
-    Padding="10"
-    Margin="10"
-    HorizontalOptions="Center">
-        <CollectionView x:Name="GroceryListView" ItemsSource="{Binding ProductCategories}" HorizontalOptions="Center">
+    <Border Stroke="#C49B33" 
+            StrokeThickness="4" 
+            Padding="10" 
+            Margin="10"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+        <CollectionView ItemsSource="{Binding Products}" 
+                        Margin="20"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
             </CollectionView.ItemsLayout>
+
             <CollectionView.Header>
-                <Grid>
+                <Grid Padding="5" BackgroundColor="#2C2C2C">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Text="ID" Grid.Column="0" FontAttributes="Bold"/>
-                    <Label Text="Naam" Grid.Column="1" FontAttributes="Bold"/>
+                    <Label Text="Productnaam" Grid.Column="0" FontAttributes="Bold" TextColor="#C49B33"/>
+                    <Label Text="Voorraad" Grid.Column="1" FontAttributes="Bold" TextColor="#C49B33"/>
+                    <Label Text="Prijs" Grid.Column="2" FontAttributes="Bold" TextColor="#C49B33"/>
                 </Grid>
             </CollectionView.Header>
+
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="m:ProductCategory">
-                    <Grid>
+                <DataTemplate x:DataType="models:Product">
+                    <Grid Padding="5">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="{Binding Product.Name}" />
-                        <Label Grid.Column="1" Text="{Binding Product.Price, StringFormat='€ {0:F2}'}" />
+
+                        <Label Grid.Column="0" Text="{Binding Name}" TextColor="White"/>
+                        <Label Grid.Column="1" Text="{Binding Stock}" TextColor="White" />
+                        <Label Grid.Column="2" Text="{Binding Price, StringFormat='€{0:F2}'}" TextColor="White"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </Border>
-
 </ContentPage>
