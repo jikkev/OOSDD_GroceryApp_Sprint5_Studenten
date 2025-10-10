@@ -12,7 +12,7 @@ namespace Grocery.Core.Data.Repositories
             {
             new Product(1, "Melk", 300, new DateOnly(2025, 9, 25), 1.49m, 1, "Zuivel"),
             new Product(2, "Kaas", 100, new DateOnly(2025, 9, 30), 4.89m, 1, "Zuivel"),
-            new Product(3, "Brood", 400, new DateOnly(2025, 9, 12), 2.25m, 2, "Bakproducten"),
+            new Product(3, "Brood", 400, new DateOnly(2025, 9, 12), 2.25m, 0, string.Empty),
             new Product(4, "Cornflakes", 0, new DateOnly(2025, 12, 31), 3.79m, 3, "Ontbijtgranen")
             };
         }

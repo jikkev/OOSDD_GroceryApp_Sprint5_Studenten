@@ -45,22 +45,35 @@ namespace Grocery.App.ViewModels
         }
 
         [RelayCommand]
-        private void Search(string query)
+        private void SearchUncategorizedProducts(string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                FilteredCategories = new ObservableCollection<Category>(Categories);
-            }
-            else
+            
+            var allProducts = _productService.GetAll()
+                .Where(p =>
+                    p.CategoryId == 0 ||
+                    string.IsNullOrWhiteSpace(p.CategoryName) ||
+                    p.CategoryName.Equals("geen", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            
+            if (!string.IsNullOrWhiteSpace(query))
             {
                 var lower = query.ToLower();
-                var filtered = Categories
-                    .Where(c => c.Name.ToLower().Contains(lower))
+                allProducts = allProducts
+                    .Where(p => p.Name.ToLower().Contains(lower))
                     .ToList();
-
-                FilteredCategories = new ObservableCollection<Category>(filtered);
             }
+
+            
+            Products = new ObservableCollection<Product>(allProducts);
+
+            
+            if (Products.Count == 0)
+                MyMessage = "Geen producten zonder categorie gevonden.";
+            else
+                MyMessage = $"Gevonden {Products.Count} producten zonder categorie.";
         }
+
 
         [RelayCommand]
         private void LoadProductsByCategory(int categoryId)
@@ -80,8 +93,17 @@ namespace Grocery.App.ViewModels
             if (category == null)
                 return;
 
-            await Shell.Current.GoToAsync($"{nameof(ProductCategoriesView)}?CategoryId={category.Id}");
+            SelectedCategory = category;
+
+            var navigationParameter = new Dictionary<string, object>
+    {
+        { "CategoryId", category.Id },
+        { "CategoryName", category.Name }
+    };
+
+            await Shell.Current.GoToAsync(nameof(ProductCategoriesView), navigationParameter);
         }
+
 
 
         [RelayCommand]

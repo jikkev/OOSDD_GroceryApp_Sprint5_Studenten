@@ -17,48 +17,109 @@
         </Grid>
     </Shell.TitleView>
 
-    <Border Stroke="#C49B33" 
-            StrokeThickness="4" 
-            Padding="10" 
-            Margin="10"
-            HorizontalOptions="Fill"
-            VerticalOptions="Fill">
-        <CollectionView ItemsSource="{Binding Products}" 
-                        Margin="20"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
+    <Grid ColumnDefinitions="3*,2*">
+        <!-- 🟡 Linkerkant: producten in deze categorie -->
+        <Border Stroke="#C49B33" 
+                StrokeThickness="4" 
+                Padding="10" 
+                Margin="10"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
 
-            <CollectionView.Header>
-                <Grid Padding="5" BackgroundColor="#2C2C2C">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Text="Productnaam" Grid.Column="0" FontAttributes="Bold" TextColor="#C49B33"/>
-                    <Label Text="Voorraad" Grid.Column="1" FontAttributes="Bold" TextColor="#C49B33"/>
-                    <Label Text="Prijs" Grid.Column="2" FontAttributes="Bold" TextColor="#C49B33"/>
-                </Grid>
-            </CollectionView.Header>
+            <CollectionView ItemsSource="{Binding Products}" 
+                            Margin="20"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Product">
-                    <Grid Padding="5">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+
+                <!-- ✅ Dynamische kolomtitels zonder converter -->
+                <CollectionView.Header>
+                    <Grid x:Name="HeaderGrid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-
-                        <Label Grid.Column="0" Text="{Binding Name}" TextColor="White"/>
-                        <Label Grid.Column="1" Text="{Binding Stock}" TextColor="White" />
-                        <Label Grid.Column="2" Text="{Binding Price, StringFormat='€{0:F2}'}" TextColor="White"/>
+                        <Label Text="Productnaam" Grid.Column="0" FontAttributes="Bold" TextColor="#C49B33"/>
+                        <Label Text="Voorraad" Grid.Column="1" FontAttributes="Bold" TextColor="#C49B33"/>
+                        <Label Text="Prijs" Grid.Column="2" FontAttributes="Bold" TextColor="#C49B33"/>
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid"
+                                         Binding="{Binding Products.Count}"
+                                         Value="0">
+                                <Setter Property="IsVisible" Value="False"/>
+                            </DataTrigger>
+                        </Grid.Triggers>
                     </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </Border>
+                </CollectionView.Header>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Product">
+                        <Grid Padding="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{Binding Name}" TextColor="White" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="{Binding Stock}" TextColor="White" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="{Binding Price, StringFormat='€{0:F2}'}" TextColor="White" VerticalOptions="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="Er zijn nog geen producten in deze categorie."
+                               TextColor="White"
+                               FontAttributes="Italic"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Border>
+
+        <!-- 🟢 Rechterkant: producten zonder categorie -->
+        <Border Grid.Column="1"
+                Stroke="#C49B33" 
+                StrokeThickness="4" 
+                Padding="10" 
+                Margin="10"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+
+            <StackLayout>
+                <SearchBar x:Name="searchBar"
+                           Placeholder="Zoek producten zonder categorie..."
+                           SearchCommand="{Binding SearchUncategorizedProductsCommand}"
+                           SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" />
+
+                <CollectionView ItemsSource="{Binding UncategorizedProducts}"
+                                SelectionMode="Single"
+                                SelectionChangedCommand="{Binding AddProductToCategoryCommand}"
+                                SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Product">
+                            <Grid Padding="5">
+                                <Label Text="{Binding Name}" TextColor="White" VerticalOptions="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="Er zijn geen producten meer om toe te voegen."
+                                   TextColor="White"
+                                   FontAttributes="Italic"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </StackLayout>
+        </Border>
+    </Grid>
 </ContentPage>
