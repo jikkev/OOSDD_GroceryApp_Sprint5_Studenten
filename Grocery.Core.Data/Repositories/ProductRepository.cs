@@ -8,12 +8,15 @@ namespace Grocery.Core.Data.Repositories
         private readonly List<Product> products;
         public ProductRepository()
         {
-            products = [
-                new Product(1, "Melk", 300, new DateOnly(2025, 9, 25)),
-                new Product(2, "Kaas", 100, new DateOnly(2025, 9, 30)),
-                new Product(3, "Brood", 400, new DateOnly(2025, 9, 12)),
-                new Product(4, "Cornflakes", 0, new DateOnly(2025, 12, 31))];
+            products = new List<Product>
+            {
+            new Product(1, "Melk", 300, new DateOnly(2025, 9, 25), 1.49m, 1, "Zuivel"),
+            new Product(2, "Kaas", 100, new DateOnly(2025, 9, 30), 4.89m, 1, "Zuivel"),
+            new Product(3, "Brood", 400, new DateOnly(2025, 9, 12), 2.25m, 2, "Bakproducten"),
+            new Product(4, "Cornflakes", 0, new DateOnly(2025, 12, 31), 3.79m, 3, "Ontbijtgranen")
+            };
         }
+
         public List<Product> GetAll()
         {
             return products;
@@ -39,7 +42,12 @@ namespace Grocery.Core.Data.Repositories
             Product? product = products.FirstOrDefault(p => p.Id == item.Id);
             if (product == null) return null;
             product.Id = item.Id;
+            product.Price = item.Price;
             return product;
+        }
+        public IEnumerable<Product> GetByCategoryId(int categoryId)
+        {
+            return products.Where(p => p.CategoryId == categoryId);
         }
     }
 }
