@@ -93,8 +93,17 @@ namespace Grocery.App.ViewModels
             if (category == null)
                 return;
 
-            await Shell.Current.GoToAsync($"{nameof(ProductCategoriesView)}?CategoryId={category.Id}");
+            SelectedCategory = category;
+
+            var navigationParameter = new Dictionary<string, object>
+    {
+        { "CategoryId", category.Id },
+        { "CategoryName", category.Name }
+    };
+
+            await Shell.Current.GoToAsync(nameof(ProductCategoriesView), navigationParameter);
         }
+
 
 
         [RelayCommand]

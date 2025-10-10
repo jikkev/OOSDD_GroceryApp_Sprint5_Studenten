@@ -8,6 +8,7 @@ using System.Linq;
 namespace Grocery.App.ViewModels
 {
     [QueryProperty(nameof(CategoryId), "CategoryId")]
+    [QueryProperty(nameof(CategoryName), "CategoryName")]
     public partial class ProductCategoriesViewModel : ObservableObject
     {
         private readonly IProductService _productService;
@@ -43,10 +44,10 @@ namespace Grocery.App.ViewModels
 
             Products = new ObservableCollection<Product>(result);
 
-            if (Products.Any())
-                CategoryName = Products.First().CategoryName;
-            else
-                CategoryName = "Categorie zonder producten";
+            if (!Products.Any())
+                CategoryName = string.IsNullOrWhiteSpace(CategoryName)
+                    ? "Categorie zonder producten"
+                    : CategoryName;
         }
 
         [RelayCommand]
