@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Grocery.Core.Models;
 
-namespace Grocery.Core.Interfaces.Repositories
+namespace Grocery.Core.Interfaces.Services
 {
-    public interface IProductCategoryRepository
+    public interface IProductCategoryService
     {
         public List<ProductCategory> GetAll();
-
-        public ProductCategory? Get(int id);
 
         public ProductCategory Add(ProductCategory item);
 
         public ProductCategory? Delete(ProductCategory item);
+
+        public ProductCategory? Get(int id);
 
         public ProductCategory? Update(ProductCategory item);
     }

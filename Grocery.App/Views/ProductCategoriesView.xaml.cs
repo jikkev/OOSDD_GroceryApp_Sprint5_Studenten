@@ -1,10 +1,16 @@
-﻿namespace Grocery.App.Views
+﻿using Grocery.App.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Grocery.App.Views;
+public partial class ProductCategoriesView : ContentPage
 {
-    public partial class ProductCategoriesView 
+    public ProductCategoriesView(ProductCategoriesViewModel viewModel)
     {
-        public ProductCategoriesView()
-        {
-            
-        }
+        InitializeComponent();
+        BindingContext = viewModel;
     }
 }

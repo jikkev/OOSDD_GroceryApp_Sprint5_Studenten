@@ -16,5 +16,30 @@ namespace Grocery.Core.Services
         {
             _productCategoryRepository = productCategoryRepository;
         }
+
+        public List<ProductCategory> GetAll()
+        {
+            return _productCategoryRepository.GetAll();
+        }
+
+        public ProductCategory Add(ProductCategory item)
+        {
+            return _productCategoryRepository.Add(item);
+        }
+
+        public ProductCategory? Delete(ProductCategory item)
+        {
+            return _productCategoryRepository.Delete(item);
+        }
+
+        public ProductCategory? Get(int id)
+        {
+            return _productCategoryRepository.Get(id);
+        }
+
+        public ProductCategory? Update(ProductCategory item)
+        {
+            return _productCategoryRepository.Update(item);
+        }
     }
 }

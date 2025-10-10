@@ -12,13 +12,8 @@ namespace Grocery.Core.Models
         public string Name { get; set; }
         public int ProductId { get; set; }
         public int CategoryId { get; set; }
+        public Product Product { get; set; }
 
-        public ProductCategory(int id, string name, int productId, int categoryId)
-        {
-            Id = id;
-            Name = name;
-            ProductId = productId;
-            CategoryId = categoryId;
-        }
+        public ProductCategory(){ }
     }
 }

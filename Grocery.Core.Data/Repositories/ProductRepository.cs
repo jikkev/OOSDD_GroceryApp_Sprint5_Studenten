@@ -39,7 +39,7 @@ namespace Grocery.Core.Data.Repositories
             Product? product = products.FirstOrDefault(p => p.Id == item.Id);
             if (product == null) return null;
             product.Id = item.Id;
-            product.prijs = item.prijs;
+            product.Price = item.Price;
             return product;
         }
     }

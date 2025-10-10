@@ -1,27 +1,37 @@
-﻿using Grocery.Core.Interfaces.Services;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
-using Grocery.Core.Models;
 using Grocery.Core.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Grocery.App.ViewModels
 {
-    public class ProductCatagoriesViewModel : BaseViewModel
+    [QueryProperty(nameof(CategoryId), "CategoryId")]
+    public partial class ProductCategoriesViewModel : BaseViewModel
     {
         private readonly IProductCategoryService _productCategoryService;
-        public ObservableCollection<ProductCategory> ProductCatagories { get; set; }
+        private readonly ICategoryService _categoryService;
 
-        public ProductCatagoriesViewModel(IProductCategoryService productCategoryService)
+        private int categoryId;
+        public int CategoryId
+        {
+            get => categoryId;
+            set => SetProperty(ref categoryId, value);
+            
+        }
+
+
+        [ObservableProperty]
+        private Category category;
+
+        [ObservableProperty]
+        private ObservableCollection<ProductCategory> productCategories;
+
+        public ProductCategoriesViewModel(IProductCategoryService productCategoryService, ICategoryService categoryService)
         {
             _productCategoryService = productCategoryService;
-            ProductCatagories = [];
+            _categoryService = categoryService;
+            
         }
     }
 }
