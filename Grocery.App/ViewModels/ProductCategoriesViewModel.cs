@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Collections.ObjectModel;
@@ -19,6 +20,9 @@ namespace Grocery.App.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<Product> products = new();
+
+        [ObservableProperty]
+        private ObservableCollection<Product> uncategorizedProducts = new();
 
         public ProductCategoriesViewModel(IProductService productService)
         {
@@ -42,7 +46,37 @@ namespace Grocery.App.ViewModels
             if (Products.Any())
                 CategoryName = Products.First().CategoryName;
             else
-                CategoryName = "Geen producten gevonden";
+                CategoryName = "Categorie zonder producten";
+        }
+
+        [RelayCommand]
+        private void SearchUncategorizedProducts(string query)
+        {
+            var allProducts = _productService.GetAll()
+                .Where(p => p.CategoryId == 0 || string.IsNullOrWhiteSpace(p.CategoryName))
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                allProducts = allProducts
+                    .Where(p => p.Name.Contains(query, System.StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            UncategorizedProducts = new ObservableCollection<Product>(allProducts);
+        }
+
+        [RelayCommand]
+        private void AddProductToCategory(Product product)
+        {
+            if (product == null)
+                return;
+
+            product.CategoryId = CategoryId;
+            product.CategoryName = CategoryName;
+
+            UncategorizedProducts.Remove(product);
+            Products.Add(product);
         }
     }
 }

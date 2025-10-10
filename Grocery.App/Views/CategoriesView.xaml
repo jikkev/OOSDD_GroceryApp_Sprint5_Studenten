@@ -19,8 +19,8 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*" />
-            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
+
 
         <Border Grid.Column="0"
                 Stroke="#C49B33"
@@ -55,58 +55,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Border>
-
-       
-        <Border Grid.Column="1"
-                Stroke="#C49B33"
-                StrokeThickness="4"
-                Padding="5"
-                Margin="5"
-                HorizontalOptions="Center">
-
-            <StackLayout>
-                <SearchBar x:Name="searchBar"
-                           Placeholder="Zoek categorie..."
-                           SearchCommand="{Binding SearchCommand}"
-                           SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" />
-
-                <CollectionView ItemsSource="{Binding FilteredCategories}"
-                                Margin="5"
-                                WidthRequest="300"
-                                HorizontalOptions="Start"
-                                SelectionMode="Single"
-                                SelectionChangedCommand="{Binding SelectCategoryCommand}"
-                                SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
-
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-                    </CollectionView.ItemsLayout>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="m:Category">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" />
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-
-                    <CollectionView.EmptyView>
-                        <ContentView>
-                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                <Label Text="Geen categorieën gevonden"
-                                       FontAttributes="Bold"
-                                       HorizontalTextAlignment="Center" />
-                            </VerticalStackLayout>
-                        </ContentView>
-                    </CollectionView.EmptyView>
-                </CollectionView>
-            </StackLayout>
-        </Border>
-
 
         <Label Grid.Row="0"
                Grid.Column="0"
