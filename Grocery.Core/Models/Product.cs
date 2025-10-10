@@ -6,6 +6,7 @@ namespace Grocery.Core.Models
     public partial class Product : Model
     {
         [ObservableProperty]
+
         private int stock;
 
         [ObservableProperty]
@@ -18,11 +19,21 @@ namespace Grocery.Core.Models
 
         public Product(int id, string name, int stock, DateOnly shelfLife, decimal price)
             : base(id, name)
+
+        public int stock;
+        public decimal Price { get; set; }
+        public DateOnly ShelfLife { get; set; }
+        public Product(int id, string name, int stock) : this(id, name, stock, default, default) { }
+
+        public Product(int id, string name, int stock, DateOnly shelfLife) : this(id, name, stock, shelfLife, 0.0m) { }
+        public Product(int id, string name, int stock, DateOnly shelfLife, decimal price): base(id, name)
+
         {
             Stock = stock;
             ShelfLife = shelfLife;
             Price = price;
         }
+
 
         public Product(int id, string name, int stock)
             : this(id, name, stock, default, default) { }
@@ -31,6 +42,9 @@ namespace Grocery.Core.Models
             : this(id, name, stock, shelfLife, default) { }
 
         public override string ToString()
+
+        public override string? ToString()
+
         {
             return $"{Name} - {Stock} op voorraad - € {Price}";
         }
