@@ -1,46 +1,112 @@
-﻿using Grocery.Core.Interfaces.Services;
-using Grocery.Core.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Grocery.App.Views;
-using Grocery.Core.Services;
+using Grocery.Core.Interfaces.Services;
+using Grocery.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Input;
-using System.Reflection.Metadata;
+using Microsoft.Maui.ApplicationModel;
 
 namespace Grocery.App.ViewModels
 {
     public partial class CategoriesViewModel : BaseViewModel
-{
-    private readonly ICategoryService _categoryService;
-    public ObservableCollection<Category> Categories { get; set; } = new();
-
-    public CategoriesViewModel(ICategoryService categoryService)
     {
-        _categoryService = categoryService;
-        Categories = [];
-        foreach (Category p in _categoryService.GetAll()) Categories.Add(p);
-    }
+        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
+
+        [ObservableProperty]
+        private ObservableCollection<Category> categories = new();
+
+        [ObservableProperty]
+        private ObservableCollection<Category> filteredCategories = new();
+
+        [ObservableProperty]
+        private ObservableCollection<Product> products = new();
+
+        [ObservableProperty]
+        private Category? selectedCategory;
+
+        [ObservableProperty]
+        private string searchQuery = string.Empty;
+
+        [ObservableProperty]
+        private string myMessage = string.Empty;
+
+        public CategoriesViewModel(ICategoryService categoryService, IProductService productService)
+        {
+            _categoryService = categoryService;
+            _productService = productService;
+
+            var allCategories = _categoryService.GetAll().ToList();
+            Categories = new ObservableCollection<Category>(allCategories);
+            FilteredCategories = new ObservableCollection<Category>(allCategories);
+        }
 
         [RelayCommand]
-        
+        private void Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                FilteredCategories = new ObservableCollection<Category>(Categories);
+            }
+            else
+            {
+                var lower = query.ToLower();
+                var filtered = Categories
+                    .Where(c => c.Name.ToLower().Contains(lower))
+                    .ToList();
+
+                FilteredCategories = new ObservableCollection<Category>(filtered);
+            }
+        }
+
+        [RelayCommand]
+        private void LoadProductsByCategory(int categoryId)
+        {
+            var productsFromCategory = _productService.GetByCategoryId(categoryId).ToList();
+            Products = new ObservableCollection<Product>(productsFromCategory);
+
+            if (Products.Count == 0)
+                MyMessage = "Geen producten gevonden voor deze categorie.";
+            else
+                MyMessage = $"Producten geladen voor categorie '{SelectedCategory?.Name}'.";
+        }
+
+        [RelayCommand]
         public async Task SelectCategory(Category category)
         {
             if (category == null)
                 return;
 
-            try
-            {
-                await Shell.Current.GoToAsync($"{nameof(ProductCategoriesView)}?CategoryId={category.Id}");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Navigation Exception: {ex}");
-            }
+            await Shell.Current.GoToAsync($"{nameof(ProductCategoriesView)}?CategoryId={category.Id}");
         }
 
+
+        [RelayCommand]
+        private void AddCategory(Category category)
+        {
+            if (category == null)
+                return;
+
+            if (!Categories.Any(c => c.Id == category.Id))
+            {
+                Categories.Add(category);
+                MyMessage = $"{category.Name} toegevoegd aan de lijst.";
+            }
+            else
+            {
+                MyMessage = $"{category.Name} bestaat al.";
+            }
+
+            FilteredCategories = new ObservableCollection<Category>(Categories);
+
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Task.Delay(3000);
+                MyMessage = string.Empty;
+            });
+        }
     }
 }

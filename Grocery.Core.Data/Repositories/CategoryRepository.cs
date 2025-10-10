@@ -14,9 +14,9 @@ namespace Grocery.Core.Data.Repositories
         public CategoryRepository()
         {
             categories = [
-                new Category(1, "Brood"),
-                new Category(2, "Zuivel"),
-                new Category(3, "Ontbijt")];
+                new Category(1, "Zuivel"),
+                new Category(2, "Bakproducten"),
+                new Category(3, "Ontbijtgranen")];
         }
         public List<Category> GetAll()
         {
