@@ -8,7 +8,6 @@ using System.Linq;
 namespace Grocery.App.ViewModels
 {
     [QueryProperty(nameof(CategoryId), "CategoryId")]
-    [QueryProperty(nameof(CategoryName), "CategoryName")]
     public partial class ProductCategoriesViewModel : ObservableObject
     {
         private readonly IProductService _productService;
@@ -28,6 +27,7 @@ namespace Grocery.App.ViewModels
         public ProductCategoriesViewModel(IProductService productService)
         {
             _productService = productService;
+            LoadUncategorizedProducts(); 
         }
 
         partial void OnCategoryIdChanged(int value)
@@ -44,16 +44,29 @@ namespace Grocery.App.ViewModels
 
             Products = new ObservableCollection<Product>(result);
 
-            if (!Products.Any())
-                CategoryName = string.IsNullOrWhiteSpace(CategoryName)
-                    ? "Categorie zonder producten"
-                    : CategoryName;
+            if (Products.Any())
+                CategoryName = Products.First().CategoryName;
+            else
+                CategoryName = "Categorie zonder producten";
+
+            LoadUncategorizedProducts(); 
+        }
+
+        private void LoadUncategorizedProducts()
+        {
+            var uncategorized = _productService
+                .GetAll()
+                .Where(p => p.CategoryId == 0 || string.IsNullOrWhiteSpace(p.CategoryName))
+                .ToList();
+
+            UncategorizedProducts = new ObservableCollection<Product>(uncategorized);
         }
 
         [RelayCommand]
         private void SearchUncategorizedProducts(string query)
         {
-            var allProducts = _productService.GetAll()
+            var allProducts = _productService
+                .GetAll()
                 .Where(p => p.CategoryId == 0 || string.IsNullOrWhiteSpace(p.CategoryName))
                 .ToList();
 
